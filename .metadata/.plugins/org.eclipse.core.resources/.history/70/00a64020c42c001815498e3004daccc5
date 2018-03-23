@@ -1,0 +1,84 @@
+package main;
+
+public class Main_16 {
+	
+	public static void main(String[] args) {
+		
+		int r = -8 >>> 0;
+		System.out.println(r);
+		/*
+		byte[] a = new byte[]{-1,-40,-1};
+		
+		int[] b = convertBinaryBase64(a);
+		
+		for (int i : b) {
+			System.out.println(i);
+		}
+		*/
+		/*
+		System.out.println(convertBinaryUnsigned((byte) -4));
+		System.out.println(252 >> 2);
+		*/
+	}
+	
+	public static int convertBinaryUnsigned(byte b){
+		return ((int)b) & 0XFF;
+	}
+	
+	public static int[] convertBinaryBase64(byte[] bytes){
+		int[] result = new int[4];
+		
+		if(bytes.length==3){
+			byte a = bytes[0];
+			byte b = bytes[1];
+			byte c = bytes[2];
+			byte a_1 = (byte) (a & 0XFC);
+			int out1 = (byte) (convertBinaryUnsigned(a_1) >> 2);
+			result[0] = out1;
+			
+			byte a_2 = (byte) ((a & 0X3) << 6);
+			byte b_1 =  (byte) ((b & 0XF0) >> 2);
+			int out2 = (convertBinaryUnsigned((byte) (a_2 | b_1)) >> 2);
+			result[1] = out2;
+			
+			byte b_2 = (byte) ((b & 0XF) << 4);
+			byte c_1 = (byte) ((c & 0XC0) >>4);
+			int out3 = (convertBinaryUnsigned((byte) (b_2 | c_1)) >> 2);
+			result[2] = out3;
+			
+			byte c_2 = (byte) (c & 0X3F);
+			byte out4 = c_2;
+			result[3] = out4;
+		}else if(bytes.length==1){
+			byte a = bytes[0];
+			byte a_1 = (byte) (a & 0XFC);
+			int out1 = (byte) (convertBinaryUnsigned(a_1) >> 2);
+			result[0] = out1;
+			
+			byte a_2 = (byte) ((a & 0X3) << 6);
+			int out2 = (convertBinaryUnsigned((byte) (a_2)) >> 2);
+			result[1] = out2;
+			
+			result[2] = 64;
+			result[3] = 64;
+		}else if(bytes.length==2){
+			byte a = bytes[0];
+			byte b = bytes[1];
+			byte a_1 = (byte) (a & 0XFC);
+			int out1 = (byte) (convertBinaryUnsigned(a_1) >> 2);
+			result[0] = out1;
+			
+			byte a_2 = (byte) ((a & 0X3) << 6);
+			byte b_1 =  (byte) ((b & 0XF0) >> 2);
+			int out2 = (convertBinaryUnsigned((byte) (a_2 | b_1)) >> 2);
+			result[1] = out2;
+			
+			byte b_2 = (byte) ((b & 0XF) << 4);
+			int out3 = (convertBinaryUnsigned((byte) (b_2)) >> 2);
+			result[2] = out3;
+			result[3] = 64;
+		}
+		return result;
+	}
+
+}

@@ -1,0 +1,61 @@
+package readjson;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+public class ReadJson {
+	public static String readJson(String path){
+		String result = null;
+		File file = new File(path);
+		InputStream input = null;
+		try {
+			if(!file.exists()){
+				result = "文件不存在";
+				return result;
+			}
+			input = new FileInputStream(file);
+			
+			byte[] data = new byte[1024];
+			//input.read(data);	//将数据读取到数组之中
+			int temp = 0;
+			StringBuffer strb = new StringBuffer();
+			while((temp = input.read(data)) !=-1){
+				String strTemp = new String(data,0,temp);
+				strTemp = strTemp.replace("\r","");
+				strTemp = strTemp.replace("\t","");
+				strTemp = strTemp.replace("\n","");
+				strTemp = strTemp.replace(" ","");
+				strb.append(strTemp);
+			}
+			result = strb.toString();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			result = "系统执行出错";
+			e.printStackTrace();
+		}finally {
+			try{
+				if(null!=input){
+					input.close();
+				}
+				
+			}catch(Exception e){
+				result = "系统执行出错";
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public static void main(String[] args) {
+		String json = readJson("C:\\Users\\user\\Desktop\\json读取\\json.txt");
+		System.out.println(json);
+		JSONObject jsonObj = JSONObject.fromObject(json);
+		//System.out.println(jsonObj);
+	}
+}

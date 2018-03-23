@@ -1,0 +1,104 @@
+package main;
+
+import java.util.Scanner;
+
+public class Main_17 {
+	
+	public static void main(String[] args) {
+		/*
+		String a = "/picture/2018-02-07/IPC717860/1/18_04_29.jpg";
+		byte[] b = a.getBytes(Charset.forName("utf-8"));
+		
+		for (byte c : b) {
+			System.out.print(c + "\t");
+		}
+		*/
+		
+		//System.out.println(new String(new byte[]{46}));
+		
+		Scanner s = new Scanner(System.in);
+		String a1 = s.nextLine();
+		
+		String a = "\\picture\\2018-03-09\\IPC886168\\1\\11_30_50.jpg";
+		
+		String b = changePath(a1);
+		System.out.println(b);
+		
+		/*
+		System.out.println("原始字符串："+a);
+		String b = getCoding(a);
+		System.out.println("编码后的字符串："+b);
+		String c = getDecode(b);
+		System.out.println("解码后的字符串："+c);
+		*/
+		
+	}
+	
+	public static String changePath(String path){
+		String a = path.replace("\\", "/");
+		String b = a.replace(".tmp", "");
+		return b;
+	}
+	
+	
+	static final char[] ENCODED_LIBRARY = {
+			'a','b','c','d','e','f','g','h','i',
+			'j','k','l','m','n','o','p','q','r',
+			's','t','u','v','w','x','y','z','0',
+			'1','2','3','4','5','6','7','8','9',
+			'/','.',':','-','_','I','P','C'
+	};
+	
+	
+	static final char[] SYSTEM_TE = {
+			'0','1','2','3','4','5','6','7','8',
+			'9','a','b','c','d','e','f','g','h',
+			'i','j','k','l','m','n','A','B','C',
+			'D','E','F','G','H','I','J','K','L',
+			'M','N','O','P','Q','R','S','T'
+	};
+	
+	
+	private static int getCodingIndex(char c){
+		for (int i = 0; i < ENCODED_LIBRARY.length; i++) {
+			if(ENCODED_LIBRARY[i] == c){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	
+	private static int getDecodeIndex(char c){
+		for (int i = 0; i < SYSTEM_TE.length; i++) {
+			if(SYSTEM_TE[i] == c){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	
+	public static String getCoding(String str){
+		StringBuffer buffer = new StringBuffer();
+		char[] chars = str.toCharArray();
+		for (char c : chars) {
+			int index = getCodingIndex(c);
+			buffer.append(SYSTEM_TE[index]);
+		}
+		return buffer.toString();
+	}
+	
+	
+	public static String getDecode(String str){
+		StringBuffer buffer = new StringBuffer();
+		char[] chars = str.toCharArray();
+		for (char c : chars) {
+			int index = getDecodeIndex(c);
+			buffer.append(ENCODED_LIBRARY[index]);
+		}
+		return buffer.toString();
+	}
+	
+
+}

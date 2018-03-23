@@ -1,0 +1,224 @@
+package readjson;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+public class ReadJson {
+	
+	public static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+	
+	public static String readJson(String path){
+		String result = null;
+		File file = new File(path);
+		InputStream input = null;
+		try {
+			if(!file.exists()){
+				result = "文件不存在";
+				return result;
+			}
+			input = new FileInputStream(file);
+			byte[] data = new byte[1024];
+			
+			
+			//input.read(data);	//将数据读取到数组之中
+			int temp = 0;
+			/*
+			 byte[] head = new byte[3];    
+		        input.read(head);      
+		        String code = "";    
+		     
+		            code = "gb2312";    
+		        if (head[0] == -1 && head[1] == -2 )    
+		            code = "UTF-16";    
+		        if (head[0] == -2 && head[1] == -1 )    
+		            code = "Unicode";    
+		        if(head[0]==-17 && head[1]==-69 && head[2] ==-65)    
+		            code = "UTF-8"; 
+		        
+		        System.out.println(code);
+			*/
+			byte[] code = new byte[3];
+			System.out.println(input.read(code));
+			System.out.println(code[0]);
+			System.out.println(code[1]);
+			System.out.println(code[2]);
+			
+		    StringBuffer strb = new StringBuffer();
+			while((temp = input.read(data)) !=-1){
+				String strTemp = new String(data,0,temp);
+				strTemp = strTemp.replace("\r","");
+				strTemp = strTemp.replace("\t","");
+				strTemp = strTemp.replace("\n","");
+				strTemp = strTemp.replace(" ","");
+				strTemp = strTemp.replaceAll("\"","\'");
+				strb.append(strTemp);
+			}
+			result = strb.toString();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			result = "系统执行出错";
+			e.printStackTrace();
+		}finally {
+			try{
+				if(null!=input){
+					input.close();
+				}
+				
+			}catch(Exception e){
+				result = "系统执行出错";
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	
+	public static String writeExcel(JSONArray jsonArr,String path){
+		String result = "";
+		
+		if(null==jsonArr){
+			result =  "json为空";
+		}else{
+			if(jsonArr.size()==0){
+				result = "json为空";
+			}else{
+				File folder = new File(path);
+				if(!folder.exists()){
+					folder.mkdirs();
+				}
+				
+				String fileName = FORMATTER.format(new Date());
+				String name = fileName.concat(".xls");
+				WritableWorkbook book = null;
+				File file = null;
+				
+				try {
+					
+					file = new File(path.concat(File.separator).concat(name));
+					book = Workbook.createWorkbook(file);//创建xls文件
+					WritableSheet sheet  =  book.createSheet("访问记录",0);
+					for(int s=0;s<12;++s){
+						switch (s) {
+						case 0:
+							sheet.addCell(new Label(s,0,"序号"));
+							break;
+						case 1:
+							sheet.addCell(new Label(s,0,"姓名"));						
+							break;
+						case 2:
+							sheet.addCell(new Label(s,0,"性别"));
+							break;
+						case 3:
+							sheet.addCell(new Label(s,0,"电话"));
+							break;
+						case 4:
+							sheet.addCell(new Label(s,0,"身份证号"));
+							break;
+						case 5:
+							sheet.addCell(new Label(s,0,"生日"));
+							break;
+						case 6:
+							sheet.addCell(new Label(s,0,"登记时间"));
+							break;
+						case 7:
+							sheet.addCell(new Label(s,0,"离开时间"));
+							break;
+						case 8:
+							sheet.addCell(new Label(s,0,"值班人员"));
+							break;
+						case 9:
+							sheet.addCell(new Label(s,0,"来访事由"));
+							break;
+						case 10:
+							sheet.addCell(new Label(s,0,"住址"));
+							break;
+						case 11:
+							sheet.addCell(new Label(s,0,"备注"));
+							break;
+						}
+					}
+					
+					for(int j=0;j<jsonArr.size();++j){
+						//for(int k=1;k)
+						JSONObject temp = jsonArr.getJSONObject(j).getJSONObject("visitor");
+						sheet.addCell(new Label(j+1,1,jsonArr.getJSONObject(j).get("uuid").toString()));
+						sheet.addCell(new Label(j+1,2,temp.get("name").toString()));
+						
+						switch(Integer.parseInt(temp.getString("sex"))){
+						case 0:
+							sheet.addCell(new Label(j+1,3,"女"));
+							break;
+						case 1:
+							sheet.addCell(new Label(j+1,3,"男"));
+							break;
+						}
+						sheet.addCell(new Label(j+1,4,temp.getString("phone")));
+						sheet.addCell(new Label(j+1,5,temp.getString("idNumber")));
+						sheet.addCell(new Label(j+1,6,temp.getString("birthdate")));
+						sheet.addCell(new Label(j+1,7,jsonArr.getJSONObject(j).getString("registerTime")));
+						sheet.addCell(new Label(j+1,8,jsonArr.getJSONObject(j).getString("leaveTime")));
+						sheet.addCell(new Label(j+1,9,jsonArr.getJSONObject(j).getString("userUuid")));
+						sheet.addCell(new Label(j+1,10,jsonArr.getJSONObject(j).getString("visitorContent")));
+						sheet.addCell(new Label(j+1,11,temp.getString("site")));
+						sheet.addCell(new Label(j+1,12,jsonArr.getJSONObject(j).getString("remark")));
+
+					}
+					
+					book.write();
+					result = file.getPath();
+					
+				}catch(Exception e){
+					e.printStackTrace();
+				}finally{
+					if(book!=null){
+						try {
+							book.close();
+						} catch (WriteException e) {
+							// TODO Auto-generated catch block
+							result = "WriteException";
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							result = "IOException";
+							e.printStackTrace();
+						}
+					}
+				}
+				
+			}
+		}
+		return result;
+	}
+	
+	
+	public static void main(String[] args) {
+		String json = readJson("C:\\Users\\user\\Desktop\\json读取\\json.txt");
+		//String str = "{'response':[{'uuid':'uuid','registerTime':'登记日期','leaveTime':'','intervieweeUuid':'被访人UUID','userUuid':'登录用户UUID（值班人员）','visitorContent':'来访事由','remark':'备注','state':0,'printContent':'打印机内容','faceImageBase64':'人脸图片base64格式','visitor':{'name':'姓名','sex':1,'nation':'汉','birthdate':'2017-04-12','site':'住址','idNumber':'320xxxxxxxxxxx6548','phone':'电话','idImageBase64':'身份证照片base64格式','issuingAuthority':'签发机关','timeLimitStart':'有效日期开始期限','timeLimitEnd':'有效日期结束期限'}},{'uuid':'uuid','registerTime':'登记日期','leaveTime':'','intervieweeUuid':'被访人UUID','userUuid':'登录用户UUID（值班人员）','visitorContent':'来访事由','remark':'备注','state':0,'printContent':'打印机内容','faceImageBase64':'人脸图片base64格式','visitor':{'name':'姓名','sex':1,'nation':'汉','birthdate':'2017-04-12','site':'住址','idNumber':'320xxxxxxxxxxx6548','phone':'电话','idImageBase64':'身份证照片base64格式','issuingAuthority':'签发机关','timeLimitStart':'有效日期开始期限','timeLimitEnd':'有效日期结束期限'}}]}";
+		//System.out.println(json);
+		JSONArray jsonArr = JSONObject.fromObject(json).getJSONArray("response");
+		//System.out.println(jsonArr.size());
+		//for(int i=0;i<jsonArr.size();++i){
+		//	System.out.println(jsonArr.get(i));
+		//}
+		//System.out.println(jsonObj.get("response"));
+		//System.out.println(jsonObj);
+		
+		System.out.println(writeExcel(jsonArr, "d:\\jsonOutput"));
+		
+	}
+}

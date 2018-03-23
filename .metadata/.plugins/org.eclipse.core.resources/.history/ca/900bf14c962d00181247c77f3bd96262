@@ -1,0 +1,15 @@
+package main;
+
+import java.nio.charset.Charset;
+
+public class Main_17 {
+	
+	public static void main(String[] args) {
+		String a = "";
+		byte[] b = a.getBytes(Charset.forName("utf-8"));
+		for (byte c : b) {
+			System.out.print(c + "\t");
+		}
+	}
+
+}

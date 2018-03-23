@@ -1,0 +1,5 @@
+package apacheftpserver;
+
+public interface UploadFileAction {
+
+}

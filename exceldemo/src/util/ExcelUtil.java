@@ -1,0 +1,348 @@
+package util;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import bean.Student;
+import bean.User;
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
+
+public class ExcelUtil {
+	
+	private ExcelUtil(){}
+
+	public static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+	
+	/**
+	 * 将list集合转成Excel文件
+	 * @param list	对象集合
+	 * @param path	输出路径
+	 * @return
+	 */
+	public static String createExcel(List<? extends Object> list,String path){
+		String result = "";
+		if(list.size()==0||list==null){
+			result = "没有对象信息";
+		}else{
+			Object o = list.get(0);
+			Class<? extends Object> clazz = o.getClass();
+			String className = clazz.getSimpleName();
+			Field[] fields=clazz.getDeclaredFields();//通过反射获取字段数组
+			File folder = new File(path);
+			if(!folder.exists()){
+				folder.mkdirs();
+			}
+			String fileName = FORMATTER.format(new Date());
+			String name = fileName.concat(".xls");
+			WritableWorkbook book = null;
+			File file = null;
+			try {
+				file = new File(path.concat(File.separator).concat(name));
+				book = Workbook.createWorkbook(file);//创建xls文件
+				WritableSheet sheet  =  book.createSheet(className,0);
+				int i = 0;	//列
+				int j = 0;	//行
+				for(Field f:fields){
+					j = 0;
+					Label label = new Label(i, j,f.getName());
+					sheet.addCell(label);
+					j = 1;
+					for(Object obj:list){
+						Object temp = getFieldValueByName(f.getName(),obj);
+						String strTemp = "";
+						if(temp!=null){
+							strTemp = temp.toString();
+						}
+						sheet.addCell(new Label(i,j,strTemp));
+						j++;
+					}
+					i++;
+		        }
+				book.write();
+				result = file.getPath();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				result = "SystemException";
+				e.printStackTrace();
+			}finally{
+				fileName = null;
+				name = null;
+				folder = null;
+				file = null;
+				if(book!=null){
+					try {
+						book.close();
+					} catch (WriteException e) {
+						// TODO Auto-generated catch block
+						result = "WriteException";
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						result = "IOException";
+						e.printStackTrace();
+					}
+				}
+			}
+	        
+		}
+		
+		return result;
+	}
+	
+	public static void main(String[] args) {
+		
+		List<User> users = new ArrayList<>();
+		users.add(new User("张三", "男", 20, 172, 53));
+		users.add(new User("李四", "男", 21, 168, 50));
+		users.add(new User("张娜", "女", 21, 160, 54));
+		users.add(new User("王婷", "女", 19, 158, 50));
+		System.out.println(createExcel(users, "D:\\excel"));
+		
+		
+		
+		/*
+		Student stu1 = new Student();
+		Student stu2 = new Student();
+		stu1.setSname("张三");
+		stu1.setSex("男");
+		stu1.setBirthday("1992-03-04");
+		stu1.setLovenum(7);
+		stu2.setSname("李四");
+		stu2.setSex("女");
+		stu2.setBirthday("1993-07-17");
+		stu2.setLovenum(20);
+		List<Student> stus = new ArrayList<>();
+		stus.add(stu1);
+		stus.add(stu2);
+		System.out.println(createExcel(stus, "D:\\excel"));
+		*/
+		
+		/*
+		List<String[]> sts = convertStringList(stus);
+		for(String[] s:sts){
+			for(String s2:s){
+				System.out.print(s2+"\t");
+			}
+			System.out.println();
+		}
+		*/
+		/*
+		String[] data = new String[]{"data1","data2","data3","data4","data5","data6"};
+		File file = new File("D:\\excel\\20171019153304775.xls");
+		try {
+			for(int i=0;i<5;++i){
+				addExcel(file,data);
+			}
+			
+		} catch (RowsExceededException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BiffException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (WriteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+		
+		
+	}
+	
+	/**
+	 * 获取报错异常字符串
+	 * @param e
+	 * @return
+	 */
+	/*
+   private static String exceptionToString(Throwable e){
+       StringWriter sw = new StringWriter();
+       PrintWriter pw = new PrintWriter(sw, true);
+       e.printStackTrace(pw);
+       pw.flush();
+       sw.flush();
+       try {
+    	   if(pw!=null){
+    		   pw.close();
+    	   }
+    	   if(sw!=null){
+    		   sw.close();
+    	   }
+	} catch (IOException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+       return sw.toString();
+   }
+   */
+   /**
+    * 获取异常信息字符串方法二
+    * @param ex
+    * @return
+    */
+   /*
+   public static String exceptionToString(Exception e) {
+       ByteArrayOutputStream out = new ByteArrayOutputStream();
+       PrintStream pout = new PrintStream(out);
+       e.printStackTrace(pout);
+       String ret = new String(out.toByteArray());
+       try {
+    	   if(pout!=null){
+    		   pout.close();
+    	   }
+    	   if(out!=null){
+    		   out.close();
+    	   }
+    	} catch (Exception ex) {
+    	   ret = "关闭异常"+ret;
+       }
+       return ret;
+   }
+   */
+	
+	/**
+	 * 读取excel文件
+	 * @param filePath	文件目录
+	 * @throws IOException
+	 * @throws BiffException
+	 */
+	public static List<String[]> readExcel(String filePath){
+		List<String[]> list = null;
+		File file = new File(filePath);
+		if(file.exists()){
+			list = new ArrayList<String[]>();
+			InputStream stream = null;
+			Workbook rwb = null;
+			try{
+				 //创建输入流  
+		        stream = new FileInputStream(file);  
+		        //获取Excel文件对象  
+		        rwb = Workbook.getWorkbook(stream);  
+		        //获取文件的指定工作表 默认的第一个  
+		        Sheet sheet = rwb.getSheet(0);    
+		        //行数(表头的目录不需要，从1开始)
+		        for(int i=0; i<sheet.getRows(); i++){
+		             //创建一个数组 用来存储每一列的值  
+		            String[] str = new String[sheet.getColumns()];  
+		            Cell cell = null;  
+		            //列数  
+		            for(int j=0; j<sheet.getColumns(); j++){
+		              //获取第i行，第j列的值  
+		              cell = sheet.getCell(j,i);      
+		              str[j] = cell.getContents();  
+		            }  
+		          //把刚获取的列存入list  
+		          list.add(str);  
+		        }
+			}catch(Exception e){
+				list = null;
+				e.printStackTrace();
+			}finally{
+				try {
+					if(rwb!=null){
+						rwb.close();
+					}
+					
+					if(stream!=null){
+						stream.close();
+					}
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}
+		return list;
+    }
+	
+	
+	public static void addExcel(File file,String[] args) throws BiffException,IOException,RowsExceededException,WriteException{
+		Workbook book = Workbook.getWorkbook(file);
+		Sheet sheet = book.getSheet(0);
+		
+		//获取行
+		int length = sheet.getRows();
+		System.out.println("行数有"+length+"行");
+		//根据book创建一个操作对象
+		WritableWorkbook wbook = Workbook.createWorkbook(file, book);
+		WritableSheet sh = wbook.getSheet(0); //得到一个工作对象
+		//从最后一行开始添加
+		for(int i=0;i< args.length;i++){
+			Label label = new Label(i, length, args[i]);
+			sh.addCell(label);
+		}
+		wbook.write();
+		wbook.close();
+	}
+	
+	
+	/**
+	 * 获取属性值
+	 * @param fieldName	字段名称
+	 * @param o	对象
+	 * @return	Object
+	 */
+   private static Object getFieldValueByName(String fieldName, Object o) {
+       try {
+           String firstLetter = fieldName.substring(0, 1).toUpperCase();    
+           String getter = "get" + firstLetter + fieldName.substring(1);    
+           Method method = o.getClass().getMethod(getter, new Class[] {});
+           Object value = method.invoke(o, new Object[] {});    
+           return value;
+       } catch (Exception e) {
+           e.printStackTrace();
+           return null;    
+       }    
+   }
+   
+   
+   //把属性转换成string
+	public static String convertString(Object obj){
+		if(null==obj){
+			return "null";
+		}
+		return obj.toString();
+	}
+   
+   /**
+    * 将list集合转换成 String数组list
+    * @param students
+    * @param haveHead
+    * @return
+    */
+	public static List<String[]> convertStringList(List<Student> students){
+		List<String[]> str = new ArrayList<>();
+		for(Student s:students){
+			str.add(new String[]{convertString(s.getSid()),convertString(s.getSname()),convertString(s.getSex()),convertString(s.getBirthday()),convertString(s.getLovenum()),convertString(s.getCid()),convertString(s.getStatus()),convertString(s.getCreatetime())});
+		}
+		return str;
+	}
+   
+}

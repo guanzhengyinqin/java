@@ -1,0 +1,7 @@
+package apacheftpserver;
+
+import org.apache.ftpserver.command.impl.STOR;
+
+public class STORcommand extends STOR {
+
+}

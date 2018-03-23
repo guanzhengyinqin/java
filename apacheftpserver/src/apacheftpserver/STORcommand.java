@@ -1,0 +1,35 @@
+package apacheftpserver;
+
+import java.io.IOException;
+
+import org.apache.ftpserver.command.impl.STOR;
+import org.apache.ftpserver.ftplet.FtpException;
+import org.apache.ftpserver.ftplet.FtpFile;
+import org.apache.ftpserver.ftplet.FtpRequest;
+import org.apache.ftpserver.impl.FtpIoSession;
+import org.apache.ftpserver.impl.FtpServerContext;
+
+public class STORcommand extends STOR {
+	
+	private UploadFileAction uploadFileAction;
+	
+	public STORcommand(UploadFileAction uploadFileAction){
+		if(null!=uploadFileAction){
+			this.uploadFileAction = uploadFileAction;
+		}
+	}
+	
+	@Override
+	public void execute(FtpIoSession session, FtpServerContext comtext, FtpRequest request) throws IOException, FtpException {
+		// TODO Auto-generated method stub
+		String fileName = request.getArgument();
+		
+		super.execute(session, comtext, request);
+		FtpFile ftpFile = session.getFileSystemView().getFile(fileName);
+		fileName = ftpFile.getAbsolutePath();
+		if(null!=uploadFileAction){
+			uploadFileAction.getUploadFileName(fileName);
+		}
+	}
+
+}

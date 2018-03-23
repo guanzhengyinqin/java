@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;baxcallkey.MD5Util&apos; to &apos;BaxcallKey&apos;&#x0D;&#x0A;- Original project: &apos;baxcallkey&apos;&#x0D;&#x0A;- Original element: &apos;baxcallkey.MD5Util&apos;&#x0D;&#x0A;- Renamed element: &apos;baxcallkey.BaxcallKey&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;MD5Util&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;baxcallkey{MD5Util.java[MD5Util" matchStrategy="1" name="BaxcallKey" qualified="false" references="true" similarDeclarations="false" stamp="1498730650896" textual="false" version="1.0"/>
+</session>

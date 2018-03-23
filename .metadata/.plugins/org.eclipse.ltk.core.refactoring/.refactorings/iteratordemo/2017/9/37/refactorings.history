@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;iteratordemo.Icollection&apos; to &apos;ICollection&apos;&#x0D;&#x0A;- Original project: &apos;iteratordemo&apos;&#x0D;&#x0A;- Original element: &apos;iteratordemo.Icollection&apos;&#x0D;&#x0A;- Renamed element: &apos;iteratordemo.ICollection&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;Icollection&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;iteratordemo{Icollection.java[Icollection" matchStrategy="1" name="ICollection" qualified="false" references="true" similarDeclarations="false" stamp="1505287936176" textual="false" version="1.0"/>
+</session>

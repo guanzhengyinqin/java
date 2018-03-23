@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;receptionData.Main11&apos; to &apos;SocketNio&apos;&#x0D;&#x0A;- Original project: &apos;plateSocketReception&apos;&#x0D;&#x0A;- Original element: &apos;receptionData.Main11&apos;&#x0D;&#x0A;- Renamed element: &apos;receptionData.SocketNio&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;Main11&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;receptionData{Main11.java[Main11" matchStrategy="1" name="SocketNio" qualified="false" references="true" similarDeclarations="false" stamp="1519987257806" textual="false" version="1.0"/>
+</session>

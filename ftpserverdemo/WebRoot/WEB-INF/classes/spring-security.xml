@@ -1,0 +1,49 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
+
+	<http auto-config="true">
+		<!-- 拥有ROLE_ADMIN的角色权限才可以访问 -->
+		<intercept-url pattern="/tcpSefi**" access="ROLE_ADMIN" />
+		<!-- 拥有ROLE_USER的角色权限才可以访问 -->
+		<intercept-url pattern="/user" access="ROLE_USER" />
+		<!-- 用户注销时，跳转到登录界面 -->
+		<logout logout-success-url="/login" />
+		<!-- 记住我，两周之内不必登陆 -->
+		<remember-me key="_spring_security_remember_me" />
+		<!-- 防御会话伪造攻击 -->
+		<session-management session-fixation-protection="none" />
+		<!-- 取消默认的spring自带的spring_security_login页面,自定义登录界面. 默认访问user页面 -->
+		<intercept-url pattern="/login"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<form-login login-page="/login"
+			authentication-failure-url="/login?error=true"
+			default-target-url="/tcpSefi/list" />
+	</http>
+
+	<authentication-manager>
+		<authentication-provider>
+			<!-- 测试时使用硬编码形式 -->
+			<user-service>
+				<!--             以admin的形式登录，你就有ROLE_USER,ROLE_ADMIN两个用户角色的权限进行访问 -->
+				<user name="admin" password="admin"
+					authorities="ROLE_USER,ROLE_ADMIN" />
+				<!-- 以user的形式登录，你只有ROLE_USER的用户角色的权限进行访问 -->
+				<user name="user" password="user"
+					authorities="ROLE_USER" />
+			</user-service>
+
+			<!-- 为了简单起间用户角色都放到同一张表了，一个用户只能有一个角色了 -->
+			<!--     <jdbc-user-service 
+				data-source-ref="dataSource" 
+				users-by-username-query="SELECT T.USERCODE,T.PASSWORD,1 FROM  JXD7_CJ_TCPUSER T WHERE T.USERCODE = ?"
+				authorities-by-username-query="SELECT DISTINCT T.USERCODE,T.ROLE FROM JXD7_CJ_TCPUSER T WHERE T.USERCODE = ?" />
+			-->
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>

@@ -1,0 +1,30 @@
+package main;
+
+public class Main_9 {
+	
+	public static void main(String[] args) {
+		
+		int[] ps = getPort(3396);
+		
+		System.out.println(ps[0]+"\t"+ps[1]);
+		
+	}
+	
+	public static int[] separationPort(int port){
+		
+		int a = port >> 8;
+		int b = port & 0xFF;
+		
+		return new int[]{a,b};
+		
+	}
+	
+	public static int restorePort(int[] separationPort){
+		int result = 0;
+		if(separationPort.length==2){
+			result = separationPort[0] << 8;
+		}
+		return result;
+	}
+
+}

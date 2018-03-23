@@ -1,0 +1,63 @@
+package readjson;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
+public class JTextFieldDemo1 {
+ JFrame jf;
+ JPanel jp;
+ JTextField jtf1,jtf2,jtf3,jtf4;
+ 
+ public JTextFieldDemo1() {
+  
+  jf = new JFrame("TextField案例");
+  
+  Container contentPane = jf.getContentPane();
+  contentPane.setLayout(new BorderLayout());
+  
+  jp = new JPanel();
+  
+  jtf1 = new JTextField("输入路径(只支持utf-8)：");
+  jtf2 = new JTextField(15);
+  jtf3 = new JTextField("输出路径：");
+  jtf4 = new JTextField(15);
+  
+  jtf3.setEnabled(false);
+  jtf1.setEnabled(false);
+  //设置文本的水平对齐方式
+  //jtf4.setHorizontalAlignment(JTextField.CENTER);
+  
+  jp.add(jtf1);
+  jp.add(jtf2);
+  jp.add(jtf3);
+  jp.add(jtf4);
+  JButton button = new JButton("生成excel文件");
+  button.addActionListener(new ActionListener(){
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println(jtf1.getText());
+		System.out.println(jtf2.getText());
+		System.out.println(jtf3.getText());
+		System.out.println(jtf4.getText());
+	}
+	  
+  });
+  jp.add(button);
+  
+
+  contentPane.add(jp);
+  
+  jf.pack();
+  jf.setLocation(400, 200);
+  jf.setVisible(true);
+  jf.addWindowListener(new WindowAdapter() {
+   public void windowClosing(WindowEvent e) {
+    System.exit(0);
+   }
+  });
+ }
+}

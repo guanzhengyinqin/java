@@ -1,0 +1,31 @@
+package readjson;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+public class ReadJson {
+	public static String readJson(String path){
+		String result = null;
+		File file = new File(path);
+		InputStream input = null;
+		try {
+			if(!file.exists()){
+				result = "文件不存在";
+				return result;
+			}
+			System.out.println("aaa");
+			input = new FileInputStream(file);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(readJson("C:\\Users\\user\\Desktop\\json读取\\txt.txt"));
+	}
+}

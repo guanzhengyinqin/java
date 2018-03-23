@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;Main11.java&apos; to &apos;plateSocketReception/src/receptionData&apos;&#x0D;&#x0A;- Original project: &apos;main&apos;&#x0D;&#x0A;- Destination element: &apos;plateSocketReception/src/receptionData&apos;&#x0D;&#x0A;- Original element: &apos;main.Main11.java&apos;" description="Copy compilation unit" destination="=plateSocketReception/src&lt;receptionData" element1="/src&lt;main{Main11.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1519987231214" units="1" version="1.0"/>
+</session>

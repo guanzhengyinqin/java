@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;com.baxcall.inter.impl.X&apos; to &apos;Heads&apos;&#x0D;&#x0A;- Original project: &apos;socket_server_demo&apos;&#x0D;&#x0A;- Original element: &apos;com.baxcall.inter.impl.X&apos;&#x0D;&#x0A;- Renamed element: &apos;com.baxcall.inter.impl.Heads&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;X&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;com.baxcall.inter.impl{X.java[X" matchStrategy="1" name="Heads" qualified="false" references="true" similarDeclarations="false" stamp="1516093016650" textual="false" version="1.0"/>
+</session>
